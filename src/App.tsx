@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Button,
@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import FarmerPostForm from './FarmerPostForm';
 
 const theme = createTheme();
 
@@ -51,6 +52,13 @@ const articles: Article[] = [
 ];
 
 const MainPage: React.FC = () => {
+  const [showForm, setShowForm] = useState(false);
+
+  const handleFormSubmit = (formData: any) => {
+    console.log(formData);
+    setShowForm(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -95,14 +103,27 @@ const MainPage: React.FC = () => {
               A platform connecting farmers in need with volunteers who are ready to help, creating resilience against extreme climate events.
             </Typography>
             <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
+            sx={{ pt: 4 }}
+            direction="column"
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
             >
+            <Stack direction="row" spacing={2}>
               <Button variant="contained">Get Started</Button>
               <Button variant="outlined">Learn More</Button>
+              <Button variant="contained" color="primary" onClick={() => setShowForm(!showForm)}>
+                Post Help Request
+              </Button>
             </Stack>
+  
+  {/* Form should appear below the buttons when showForm is true */}
+  {showForm && (
+    <Box sx={{ mt: 2, width: '100%' }}>
+      <FarmerPostForm onSubmit={handleFormSubmit} />
+    </Box>
+  )}
+</Stack>
           </Container>
         </Box>
 
@@ -116,8 +137,7 @@ const MainPage: React.FC = () => {
                   <CardMedia
                     component="img"
                     sx={{
-                      // 16:9 aspect ratio
-                      pt: '56.25%',
+                      pt: '56.25%', // 16:9 aspect ratio
                     }}
                     image="https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80"
                     alt="farm image"
@@ -180,6 +200,6 @@ const MainPage: React.FC = () => {
       </Box>
     </ThemeProvider>
   );
-}
+};
 
 export default MainPage;
