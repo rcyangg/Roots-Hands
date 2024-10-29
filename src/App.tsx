@@ -19,6 +19,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FarmerPostForm from './FarmerPostForm';
+import FarmerSignUpForm from './FarmerSignUpForm';
 
 const theme = createTheme();
 
@@ -53,11 +54,15 @@ const articles: Article[] = [
 
 const MainPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
-
+  const [showSignUp, setShowSignUp] = useState(false);
   const handleFormSubmit = (formData: any) => {
     console.log(formData);
     setShowForm(false);
   };
+  const handleSignUpSubmit = (formData: any) => {
+    console.log("Farmer Sign-up Date: ", formData);
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -69,7 +74,7 @@ const MainPage: React.FC = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Button color="inherit">Sign In</Button>
-          <Button color="inherit">Sign Up</Button>
+          <Button color="inherit" onClick = {()=>setShowSignUp(true)}>Sign Up</Button>
           <Button color="inherit">Resources</Button>
           <Button variant="contained" color="secondary" sx={{ ml: 2 }}>
             Need Help
@@ -79,7 +84,8 @@ const MainPage: React.FC = () => {
           </Button>
         </Toolbar>
       </AppBar>
-
+      {/* Sign-up Form Popup */}
+      <FarmerSignUpForm open = {showSignUp} onClose={() => setShowSignUp(false)} onSubmit = {handleSignUpSubmit} />
       <main>
         {/* Hero unit */}
         <Box
