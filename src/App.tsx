@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   AppBar,
   Button,
@@ -17,12 +17,16 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import UserForm from './visitorForm';
+
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ResourcePage from "./pages/Resources";
 
 const theme = createTheme();
 
-// Define types for the farmer post and article data
+// Define types for the farmer post and article dat
 interface FarmerPost {
   id: number;
   title: string;
@@ -51,7 +55,23 @@ const articles: Article[] = [
   // Add more sample articles as needed
 ];
 
+
+
 const MainPage: React.FC = () => {
+  //From State
+  const [open, setOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<FarmerPost | null>(null);
+  const handleHelpClick = (post: FarmerPost) => {
+    setSelectedPost(post);
+    setOpen(true);
+  };
+
+  const handleFormSubmit = (formData: { fullName: string; email: string; phone: string }) => {
+    setOpen(false);
+    alert(`Confirmation sent to ${formData.email} regarding help request: ${selectedPost?.title}`);
+  };
+
+
   return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -75,6 +95,43 @@ const MainPage: React.FC = () => {
             </Button>
           </Toolbar>
         </AppBar>
+
+        {/* Posts Section */}
+        <Container sx={{ py: 8 }} maxWidth="md">
+          <Typography variant="h4" gutterBottom>Farmer Help Requests</Typography>
+          <Grid container spacing={4}>
+            {farmerPosts.map((post) => (
+              <Grid item key={post.id} xs={12} sm={6} md={4}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      // 16:9 aspect ratio
+                      pt: '56.25%',
+                    }}
+                    image="https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80"
+                    alt="farm image"
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {post.title}
+                    </Typography>
+                    <Typography>
+                      {post.description}
+                    </Typography>
+                    <Typography variant="caption" color="textSecondary" style={{ display: 'block', marginTop: '10px' }}>
+                      Posted by {post.farmerName}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small">View</Button>
+                    <Button size="small" onClick={()=> handleHelpClick(post)}>Help</Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
 
         <main>
           {/* Hero unit */}
@@ -147,6 +204,7 @@ const MainPage: React.FC = () => {
             </Grid>
           </Container>
 
+
           {/* Latest Articles Section */}
           <Container sx={{ py: 8 }} maxWidth="md">
             <Typography variant="h4" gutterBottom>Latest Articles on Regenerative Agriculture</Typography>
@@ -168,6 +226,31 @@ const MainPage: React.FC = () => {
           </Container>
         </main>
 
+
+      {/* Footer */}
+      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+        <Typography variant="h6" align="center" gutterBottom>
+          FarmAid Connect
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="text.secondary"
+          component="p"
+        >
+          Helping farmers build resilience, one connection at a time.
+        </Typography>
+      </Box>
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>Help {selectedPost?.farmerName}</DialogTitle>
+        <DialogContent>
+        <UserForm onSubmit={handleFormSubmit} />
+        </DialogContent>
+    </Dialog>
+
+    </ThemeProvider>
+    
+
         {/* Footer */}
         <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
           <Typography variant="h6" align="center" gutterBottom>
@@ -183,6 +266,7 @@ const MainPage: React.FC = () => {
           </Typography>
         </Box>
       </ThemeProvider>
+
   );
 }
 
