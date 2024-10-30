@@ -282,19 +282,25 @@ const MainPage: React.FC = () => {
           </Box>
           <Container sx={{py: 8}} maxWidth="md">
           <Typography variant="h4" gutterBottom>Farmer Help Requests</Typography>
-          <Stack
-            sx={{ pt: 4 }}
-            direction="row"
-            spacing={2}
-          >
-            <Button variant="contained" color="primary" onClick={() => setShowForm(!showForm)}>
-              Post Help Request
-            </Button>
-            <Button variant="contained" color="primary" onClick={getUserLocation}>
-              Find Near Me
-            </Button>
+          <Stack sx={{ pt: 4 }} spacing={2}>
+  {/* Button Stack */}
+  <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+    <Button variant="contained" color="primary" onClick={() => setShowForm(!showForm)}>
+      Post Help Request
+    </Button>
+    <Button variant="contained" color="primary" onClick={getUserLocation}>
+      Find Near Me
+    </Button>
+  </Stack>
+  
+  {/* Form appears below the buttons when showForm is true */}
+  {showForm && (
+    <Box sx={{ mt: 2, width: '100%' }}>
+      <FarmerPostForm onSubmit={handleFormSubmit} />
+    </Box>
+  )}
+</Stack>
 
-            </Stack>
             
             <Grid container spacing={4} sx={{mt: 2}}>
               {filteredPosts.map((post) => (
