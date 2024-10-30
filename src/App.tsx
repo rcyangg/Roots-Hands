@@ -6,9 +6,11 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import FarmerPostForm from './Forms/FarmerPostForm';
+import FarmerSignUpForm from './Forms/FarmerSignUpForm';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ResourcePage from "./pages/Resources";
-import UserForm from "./visitorForm";
+import UserForm from "./Forms/visitorForm";
 
 const theme = createTheme();
 
@@ -196,12 +198,14 @@ const MainPage: React.FC = () => {
   //From State
   const [open, setOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<FarmerPost | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
   const handleHelpClick = () => {
     setOpen(true);
   };
   const [userLocation, setUserLocation] = useState<string | null>(null);
 
-  const handleFormSubmit = (formData: { fullName: string; email: string; phone: string }) => {
+  const handleHelpFormSubmit = (formData: { fullName: string; email: string; phone: string }) => {
     setOpen(false);
     alert(`Confirmation sent to ${formData.email} regarding help request: ${selectedPost?.title}`);
   };
@@ -238,6 +242,13 @@ const MainPage: React.FC = () => {
     setSelectedPost(null);
   };
 
+  const handleFormSubmit = (formData: any) => {
+    console.log(formData);
+    setShowForm(false);
+  };
+  const handleSignUpSubmit = (formData: any) => {
+    console.log("Farmer Sign-up Date: ", formData);
+  }
 
   return (
       <ThemeProvider theme={theme}>
@@ -247,7 +258,7 @@ const MainPage: React.FC = () => {
         </Typography>
           <Box sx={{flexGrow: 1}}/>
           <Button color="inherit">Sign In</Button>
-          <Button color="inherit">Sign Up</Button>
+          <Button color="inherit" onClick = {()=>setShowSignUp(true)}>Sign Up</Button>
           <Button color="inherit" component={Link} to="/resources">
             Resources
           </Button>
@@ -255,7 +266,9 @@ const MainPage: React.FC = () => {
             Need Help
           </Button>
           <Button color="inherit">
-            <SearchIcon/> </Button> </Toolbar> </AppBar>
+            <SearchIcon /> </Button> </Toolbar> </AppBar>
+          {/* Sign-up Form Popup */}
+          <FarmerSignUpForm open = {showSignUp} onClose={() => setShowSignUp(false)} onSubmit = {handleSignUpSubmit} />
         <main>
           <Box sx={{bgcolor: 'background.paper', pt: 8, pb: 6}}>
           <Container maxWidth="sm">
@@ -268,10 +281,27 @@ const MainPage: React.FC = () => {
           </Container>
           </Box>
           <Container sx={{py: 8}} maxWidth="md">
-            <Typography variant="h4" gutterBottom>Farmer Help Requests</Typography>
-            <Button variant="contained" color="primary" onClick={getUserLocation}>
-              Find Near Me
-            </Button>
+          <Typography variant="h4" gutterBottom>Farmer Help Requests</Typography>
+          <Stack sx={{ pt: 4 }} spacing={2}>
+  {/* Button Stack */}
+  <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+    <Button variant="contained" color="primary" onClick={() => setShowForm(!showForm)}>
+      Post Help Request
+    </Button>
+    <Button variant="contained" color="primary" onClick={getUserLocation}>
+      Find Near Me
+    </Button>
+  </Stack>
+  
+  {/* Form appears below the buttons when showForm is true */}
+  {showForm && (
+    <Box sx={{ mt: 2, width: '100%' }}>
+      <FarmerPostForm onSubmit={handleFormSubmit} />
+    </Box>
+  )}
+</Stack>
+
+            
             <Grid container spacing={4} sx={{mt: 2}}>
               {filteredPosts.map((post) => (
                   <Grid item key={post.id} xs={12} sm={6} md={4}>
@@ -349,7 +379,7 @@ const MainPage: React.FC = () => {
         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
           <DialogTitle>Help {selectedPost?.farmerName}</DialogTitle>
           <DialogContent>
-            <UserForm onSubmit={handleFormSubmit} />
+            <UserForm onSubmit={handleHelpFormSubmit} />
           </DialogContent>
         </Dialog>
       </ThemeProvider>);
