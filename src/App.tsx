@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import PanToolIcon from '@mui/icons-material/PanTool';
 
 const theme = createTheme();
 
@@ -112,12 +113,14 @@ const MainPage: React.FC = () => {
           <Grid container spacing={4}>
             {farmerPosts.map((post) => (
               <Grid item key={post.id} xs={12} sm={6} md={4}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                   <CardMedia
                     component="img"
                     sx={{
                       // 16:9 aspect ratio
                       pt: '56.25%',
+                      // height: '200px',
+                      position: 'relative',
                     }}
                     image="https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80"
                     alt="farm image"
@@ -135,7 +138,29 @@ const MainPage: React.FC = () => {
                   </CardContent>
                   <CardActions>
                     <Button size="small">View</Button>
-                    <Button size="small">Help</Button>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      endIcon={<PanToolIcon />}
+                      sx={{
+                        position: 'absolute',
+                        marginLeft: 'auto',
+                        top: 12,
+                        right: 12,
+                        fontWeight: 'bold',
+                        color: 'white',
+                        backgroundColor: 'red',
+                        padding: '1px 6px',
+                        zIndex: 1,
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                          backgroundColor: 'darkred',
+                        },
+                        fontSize: '1.2rem',
+                      }}
+                    >
+                      Need Help
+                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
